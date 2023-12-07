@@ -1,0 +1,44 @@
+services:
+  shell: &shell
+    image: lenchoreyes/jade:rails-app-3.0-postgres-13-bullseye
+    tmpfs:
+      - /tmp
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app:cached
+    environment:
+      - NODE_ENV=development
+      # You can use DATABASE_URL in non-development situation, but it messes
+      # up the `rails db:*` tasks in a development situation.
+      # - DATABASE_URL=postgres://pg:pg@postgres:5432
+      - DATABASE_HOST=postgres
+      - BOOTSNAP_CACHE_DIR=/usr/local/bundle/_bootsnap
+      - WEB_CONCURRENCY=1
+      - EDITOR=vi
+    command: /bin/bash
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:13
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      - PSQL_HISTFILE=/root/log/.psql_history
+      - POSTGRES_USER=pg
+      - POSTGRES_PASSWORD=pg
+    ports:
+      - 5432
+    healthcheck:
+      test: pg_isready -U pg -h 127.0.0.1
+      interval: 5s
+
+# The volumes are storage that docker-compose manages and maintains across rebuilds
+# of the images and containers. If, for example, you need to change the default
+# postgres user or password, you need to `docker volume rm <project_volume>`.
+volumes:
+  postgres:
