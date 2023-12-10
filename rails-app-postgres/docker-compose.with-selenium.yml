@@ -15,6 +15,7 @@ services:
       - BOOTSNAP_CACHE_DIR=/usr/local/bundle/_bootsnap
       - WEB_CONCURRENCY=1
       - HISTFILE=/app/.bash_history
+      - DATABASE_HOST=postgres
       - SELENIUM_HOST=selenium
       - SELENIUM_PORT=4444
       - TEST_APP_HOST=shell
