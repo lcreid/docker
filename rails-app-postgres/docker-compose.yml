@@ -1,6 +1,6 @@
 services:
   shell: &shell
-    image: lenchoreyes/jade:rails-app-3.0-postgres-13-bullseye
+    image: lenchoreyes/jade:rails-app-3.0-postgres-bookworm
     tmpfs:
       - /tmp
     stdin_open: true

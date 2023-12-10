@@ -4,7 +4,7 @@
 # https://medium.com/@retrorubies/chrome-as-a-service-for-rails-testing-b1a45e70fec1
 services:
   shell:
-    image: lenchoreyes/jade:rails-app-3.0-postgres-13-bullseye
+    image: lenchoreyes/jade:rails-app-3.2-postgres-bookworm
     stdin_open: true
     tty: true
     volumes:
@@ -20,17 +20,16 @@ services:
       - TEST_APP_HOST=shell
       - TEST_APP_PORT=3001
     ports:
+      - "3000:3000"
       - "3001:3001"
     command: /bin/bash
     depends_on:
       - postgres
 
   postgres:
-    image: postgres:13
+    image: postgres:alpine
     volumes:
-      - .psqlrc:/root/.psqlrc:ro
       - postgres:/var/lib/postgresql/data
-      - ./log:/root/log:cached
     environment:
       - PSQL_HISTFILE=/root/log/.psql_history
       # For production, these have to be settable

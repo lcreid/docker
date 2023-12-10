@@ -190,7 +190,7 @@ rails new .
 
 IIRC, some files or directories get a funny name when you do the "one step" version.
 
-### Creating a Rails Project with Postgres, Bootstrap, and `esbuild`
+### Creating a Rails Project with Postgres, Bootstrap, `esbuild`, and Selenium
 
 Here's the outline of what we're going to do:
 
@@ -201,20 +201,15 @@ Here's the outline of what we're going to do:
 ```bash
 mkdir <project>
 cd <project>
-cp <path to repo>/rails-app-postgres/docker compose.yml
-cp <path to repo>/Linux/docker compose.override.yml
-docker compose run shell
+wget -O docker-compose.yml https://github.com/lcreid/docker/raw/main/rails-app-postgres/docker-compose.with-selenium.yml
+# The following line is only for Linux without Docker Desktop:
+wget -O docker-compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/docker-compose.override.yml
+cp <path to repo>/rails-app-postgres/docker-compose.yml
+cp <path to repo>/Linux/docker-compose.override.yml
+docker compose up &
+docker compose exec -it shell /bin/bash
 gem install rails
-rails new -d postgresql --edge -j esbuild -c bootstrap .
-```
-
-Or, if you have the Doker Compose files on an accessible file systemÑ
-
-```bash
-mkdir <project>
-cd <project>
-docker compose -f <path-to-docker compose> -f <path-to-docker compose-override> up &
-docker compoase -f <path-to-docker compose> -f <path-to-docker compose-override> exec -it shell
+rails new -d postgresql -j esbuild -c bootstrap --skip-docker --skip-action-mailbox --skip-action-cable --skip-active-storage .
 ```
 
 Edit `config/database.yml` to add the following to the default. You can use your editor on the host:
@@ -240,12 +235,12 @@ web: bin/rails server -p 3000 -b 0.0.0.0
 The app is ready to start. In another terminal:
 
 ```bash
-docker compose up web
+docker compose up bin/dev
 ```
 
 Browse to `localhost:3000` and you should see the default Rails landing page.
 
-### Creating a Rails Project with Sqllite, Bootstrap, and `esbuild`
+### Creating a Rails Project with Sqllite, Bootstrap, `esbuild`, and Selenium
 
 Here's the outline of what we're going to do:
 
@@ -256,24 +251,16 @@ Here's the outline of what we're going to do:
 ```bash
 mkdir <project>
 cd <project>
-cp <path to repo>/rails-app-postgres/docker compose.yml
-cp <path to repo>/Linux/docker compose.override.yml
-docker compose -f docker compose.with-selenium.yml -f docker compose.override.yml up &
-docker compose -f docker compose.with-selenium.yml -f docker compose.override.yml exec -it shell /bin/bash
+wget -O docker-compose.yml https://github.com/lcreid/docker/raw/main/rails-app-sqlite/docker-compose.with-selenium.yml
+# The following line is only for Linux without Docker Desktop:
+wget -O docker-compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/docker-compose.override.yml
+cp <path to repo>/rails-app-postgres/docker-compose.yml
+cp <path to repo>/Linux/docker-compose.override.yml
+docker compose up &
+docker compose exec -it shell /bin/bash
 gem install rails
-rails new -d sqlite3 -j esbuild -c bootstrap .
+rails new -j esbuild -c bootstrap --skip-docker --skip-action-mailbox --skip-action-cable --skip-active-storage .
 ```
-
-Or, if you have the Doker Compose files on an accessible file systemÑ
-
-```bash
-mkdir <project>
-cd <project>
-docker compose -f <path-to-docker compose> -f <path-to-docker compose-override> up &
-docker compoase -f <path-to-docker compose> -f <path-to-docker compose-override> exec -it shell /bin/bash
-```
-
-Edit `config/database.yml` to add the following to the default. You can use your editor on the host:
 
 Now set up the database:
 
@@ -290,7 +277,7 @@ web: bin/rails server -p 3000 -b 0.0.0.0
 The app is ready to start. In another terminal:
 
 ```bash
-docker compose up web
+docker compose up bin/dev
 ```
 
 Browse to `localhost:3000` and you should see the default Rails landing page.
@@ -311,7 +298,7 @@ bin/rails restart
 ## Irritating Stuff
 
 * The `tmp/pids/server.pid` file lives on after the container stops running in many cases, so you have to manually delete it all the time.
-* Any volume for which the file or directory doesn't exist on the host, will be created by Docker before the `docker compose.override.yml` takes effect, meaning they get created as `root`.
+* Any volume for which the file or directory doesn't exist on the host, will be created by Docker before the `docker-compose.override.yml` takes effect, meaning they get created as `root`.
 
 ## Notes from Research
 
