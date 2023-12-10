@@ -110,7 +110,7 @@ vendor/bundle
 * Make sure Bundler and `gem` install to persisted locations.
 * A persistent place to put gems.
 * A persistent place to put history files for `pry` and `irb`.
-* Bundler is in the default Ruby image (at least from 3.2 on, maybe before), but the version may not be what you want (TBC).
+* Bundler is in the default Ruby image (at least from 2.7 on, maybe before), but the version may not be what you want (TBC).
 * The ability to install the distro's packages. It seems nice not to have to create a `Dockerfile` just to build what you need to try something.
 * Run as local user on Linux. This complicates the desire to be able to install packages, since installing packages requires root privileges.
 
@@ -196,7 +196,10 @@ Here's the outline of what we're going to do:
 
 1. Make a directory for the new project.
 1. Copy a couple of files for Docker Compose into the directory.
-1. Run a shell _with Docker Compose_ to create the Rails project and get it set up.
+1. Run a shell _with Docker Compose_ to create the Rails project.
+1. Set-up the database configuration so you can connect to Postgres.
+1. Fix `Procfile.dev` so you can reach your applicatoin from outside the container.
+1. Run the app to see the default Rails welcome page.
 
 ```bash
 mkdir <project>
@@ -204,15 +207,13 @@ cd <project>
 wget -O docker-compose.yml https://github.com/lcreid/docker/raw/main/rails-app-postgres/docker-compose.with-selenium.yml
 # The following line is only for Linux without Docker Desktop:
 wget -O docker-compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/docker-compose.override.yml
-cp <path to repo>/rails-app-postgres/docker-compose.yml
-cp <path to repo>/Linux/docker-compose.override.yml
 docker compose up &
 docker compose exec -it shell /bin/bash
 gem install rails
 rails new -d postgresql -j esbuild -c bootstrap --skip-docker --skip-action-mailbox --skip-action-cable --skip-active-storage .
 ```
 
-Edit `config/database.yml` to add the following to the default. You can use your editor on the host:
+Edit `config/database.yml` to add the following to the default:
 
 ```yaml
 username: pg
@@ -223,7 +224,7 @@ host: postgres
 Now set up the database:
 
 ```bash
-bin/rails db:prepare # or bin/setup
+bin/setup
 ```
 
 Edit `Procfile.dev` and change the line that starts with `web` to the following:
@@ -235,10 +236,10 @@ web: bin/rails server -p 3000 -b 0.0.0.0
 The app is ready to start. In another terminal:
 
 ```bash
-docker compose up bin/dev
+docker compose exec shell bin/dev
 ```
 
-Browse to `localhost:3000` and you should see the default Rails landing page.
+Browse to `localhost:3000` and you should see the default Rails welcome page.
 
 ### Creating a Rails Project with Sqllite, Bootstrap, `esbuild`, and Selenium
 
@@ -247,6 +248,8 @@ Here's the outline of what we're going to do:
 1. Make a directory for the new project.
 1. Copy a couple of files for Docker Compose into the directory.
 1. Run a shell _with Docker Compose_ to create the Rails project and get it set up.
+1. Fix `Procfile.dev` so you can reach your applicatoin from outside the container.
+1. Run the app to see the default Rails welcome page.
 
 ```bash
 mkdir <project>
@@ -254,18 +257,10 @@ cd <project>
 wget -O docker-compose.yml https://github.com/lcreid/docker/raw/main/rails-app-sqlite/docker-compose.with-selenium.yml
 # The following line is only for Linux without Docker Desktop:
 wget -O docker-compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/docker-compose.override.yml
-cp <path to repo>/rails-app-postgres/docker-compose.yml
-cp <path to repo>/Linux/docker-compose.override.yml
 docker compose up &
 docker compose exec -it shell /bin/bash
 gem install rails
 rails new -j esbuild -c bootstrap --skip-docker --skip-action-mailbox --skip-action-cable --skip-active-storage .
-```
-
-Now set up the database:
-
-```bash
-bin/rails db:prepare # or bin/setup
 ```
 
 Edit `Procfile.dev` and change the line that starts with `web` to the following:
@@ -277,10 +272,10 @@ web: bin/rails server -p 3000 -b 0.0.0.0
 The app is ready to start. In another terminal:
 
 ```bash
-docker compose up bin/dev
+docker compose exec shell bin/dev
 ```
 
-Browse to `localhost:3000` and you should see the default Rails landing page.
+Browse to `localhost:3000` and you should see the default Rails welcome page.
 
 ### Restarting
 
