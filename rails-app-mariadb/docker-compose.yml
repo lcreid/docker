@@ -1,0 +1,38 @@
+services:
+  shell: &shell
+    image: lenchoreyes/jade:rails-app-3.3-mariadb-bookworm
+    tmpfs:
+      - /tmp
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app:cached
+    environment:
+      - DATABASE_HOST=mariadb
+      - BOOTSNAP_CACHE_DIR=/usr/local/bundle/_bootsnap
+      - WEB_CONCURRENCY=1
+      - EDITOR=vi
+    command: /bin/bash
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    depends_on:
+      - mariadb
+
+  mariadb:
+    image: mariadb:11.2
+    volumes:
+      - mariadb:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD-SHELL", "exit | mariadb -h 127.0.0.1 -P 3306 -u root -p$$MYSQL_ROOT_PASSWORD" ]
+      interval: 5s
+
+# The volumes are storage that docker-compose manages and maintains across rebuilds
+# of the images and containers. If, for example, you need to change the default
+# mariadb user or password, you need to `docker volume rm <project_volume>`.
+volumes:
+  mariadb:

@@ -198,7 +198,7 @@ Here's the outline of what we're going to do:
 1. Copy a couple of files for Docker Compose into the directory.
 1. Run a shell _with Docker Compose_ to create the Rails project.
 1. Set-up the database configuration so you can connect to Postgres.
-1. Fix `Procfile.dev` so you can reach your applicatoin from outside the container.
+1. Fix `Procfile.dev` so you can reach your application from outside the container.
 1. Run the app to see the default Rails welcome page.
 
 ```bash
@@ -241,6 +241,57 @@ docker compose exec shell bin/dev
 
 Browse to `localhost:3000` and you should see the default Rails welcome page.
 
+### Creating a Rails Project with Mariadb (MySQL), Bootstrap, `esbuild`, and Selenium
+
+Here's the outline of what we're going to do:
+
+1. Make a directory for the new project.
+1. Copy a couple of files for Docker Compose into the directory.
+1. Run a shell _with Docker Compose_ to create the Rails project.
+1. Set-up the database configuration so you can connect to Postgres.
+1. Fix `Procfile.dev` so you can reach your application from outside the container.
+1. Run the app to see the default Rails welcome page.
+
+```bash
+mkdir <project>
+cd <project>
+wget -O docker-compose.yml https://github.com/lcreid/docker/raw/main/rails-app-mariadb/docker-compose.with-selenium.yml
+# The following line is only for Linux without Docker Desktop:
+wget -O docker-compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/docker-compose.override.yml
+docker compose up &
+docker compose exec -it shell /bin/bash
+gem install rails
+rails new -d mysql -j esbuild -c bootstrap --skip-docker --skip-action-mailbox --skip-action-cable --skip-active-storage .
+```
+
+Edit `config/database.yml` to add the following to the default:
+
+```yaml
+username: maria
+password: maria
+host: mariadb
+```
+
+Now set up the database:
+
+```bash
+bin/setup
+```
+
+Edit `Procfile.dev` and change the line that starts with `web` to the following:
+
+```procfile
+web: bin/rails server -p 3000 -b 0.0.0.0
+```
+
+The app is ready to start. In another terminal:
+
+```bash
+docker compose exec shell bin/dev
+```
+
+Browse to `localhost:3000` and you should see the default Rails welcome page.
+
 ### Creating a Rails Project with Sqllite, Bootstrap, `esbuild`, and Selenium
 
 Here's the outline of what we're going to do:
@@ -248,7 +299,7 @@ Here's the outline of what we're going to do:
 1. Make a directory for the new project.
 1. Copy a couple of files for Docker Compose into the directory.
 1. Run a shell _with Docker Compose_ to create the Rails project and get it set up.
-1. Fix `Procfile.dev` so you can reach your applicatoin from outside the container.
+1. Fix `Procfile.dev` so you can reach your application from outside the container.
 1. Run the app to see the default Rails welcome page.
 
 ```bash
