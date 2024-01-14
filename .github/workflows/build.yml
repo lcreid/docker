@@ -19,7 +19,7 @@ jobs:
         uses: docker/build-push-action@v5
         with:
           context: .
-          build_args: |
+          build-args: |
             RUBY_VERSION=${{ matrix.ruby_version }}
             DISTRO=${{ matrix.distro }}
           tags: lenchoreyes/jade:ruby-app-${{ matrix.ruby_version }}-${{ matrix.distro }}
