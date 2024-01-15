@@ -10,10 +10,10 @@ jobs:
         distro: [bullseye, bookworm]
         exclude:
           - distro: bookworm
-            ruby_version: 3.0
+            ruby_version: "3.0"
     steps:
       - uses: actions/checkout@v4
-      - run: echo "Build ${{ matrix.ruby_version }} ${{ matrix.distro }}"
+      - run: echo Build ${{ matrix.ruby_version }} ${{ matrix.distro }}
       - uses: docker/setup-buildx-action@v3
       - name: Build and push
         uses: docker/build-push-action@v5
