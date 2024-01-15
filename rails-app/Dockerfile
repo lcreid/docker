@@ -1,6 +1,6 @@
 ARG RUBY_VERSION=3.2
 ARG DISTRO=bullseye
-ARG REPOSITORY=lenchoreyes/jade/jade
+ARG REPOSITORY=lenchoreyes/jade
 ARG IMAGE=ruby-app
 
 FROM $REPOSITORY:$IMAGE-$RUBY_VERSION-$DISTRO
