@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        ruby_version: [3.0, 3.1, 3.2, 3.3]
+        ruby_version: ["3.0", "3.1", 3.2", "3.3"]
         distro: [bullseye, bookworm]
         exclude:
           - distro: bookworm
@@ -23,5 +23,7 @@ jobs:
             RUBY_VERSION=${{ matrix.ruby_version }}
             DISTRO=${{ matrix.distro }}
           tags: lenchoreyes/jade:ruby-app-${{ matrix.ruby_version }}-${{ matrix.distro }}
+          outputs: |
+            type=local,dest=.
       - name: Result
-        run: docker image ls -a
+        run: ls -a
