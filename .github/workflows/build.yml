@@ -23,7 +23,6 @@ jobs:
             RUBY_VERSION=${{ matrix.ruby_version }}
             DISTRO=${{ matrix.distro }}
           tags: lenchoreyes/jade:ruby-app-${{ matrix.ruby_version }}-${{ matrix.distro }}
-          push: true
           outputs: .
       - name: Result
         run: ls -a
