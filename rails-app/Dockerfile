@@ -1,5 +1,5 @@
-ARG RUBY_VERSION=3.2
-ARG DISTRO=bullseye
+ARG RUBY_VERSION=3.3
+ARG DISTRO=bookworm
 ARG REPOSITORY=lenchoreyes/jade
 ARG IMAGE=ruby-app
 
@@ -15,6 +15,10 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesourc
 RUN apt-get update
 RUN apt-get install nodejs -y -q
 RUN corepack enable
+
+# `rails-app` is useful for other things, like Jekyll, so let's install foreman as well.
+# Rails needs it anyway, at least in some configurationss, so this saves an install on-the-fly.
+RUN gem install foreman
 
 EXPOSE 3000
 
