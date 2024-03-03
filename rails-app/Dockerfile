@@ -18,7 +18,9 @@ RUN corepack enable
 
 # `rails-app` is useful for other things, like Jekyll, so let's install foreman as well.
 # Rails needs it anyway, at least in some configurationss, so this saves an install on-the-fly.
-RUN gem install foreman
+# But we have to make sure it goes in a default location, too, because GEM_HOME was set in
+# the ruby-app image.
+RUN env -u GEM_HOME gem install foreman
 
 EXPOSE 3000
 
