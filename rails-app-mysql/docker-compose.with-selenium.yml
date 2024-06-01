@@ -1,0 +1,55 @@
+# Set up the Selenium container based on the Selenium official:
+# https://github.com/SeleniumHQ/docker-selenium/blob/trunk/docker-compose-v3.yml
+# And:
+# https://medium.com/@retrorubies/chrome-as-a-service-for-rails-testing-b1a45e70fec1
+services:
+  shell:
+    image: lenchoreyes/jade:rails-app-3.2-mysql-bookworm
+    stdin_open: true
+    tty: true
+    volumes:
+      - .:/app:cached
+    environment:
+      - SSH_AUTH_SOCK=/ssh-agent
+      - NODE_ENV=development
+      - BOOTSNAP_CACHE_DIR=/usr/local/bundle/_bootsnap
+      - WEB_CONCURRENCY=1
+      - HISTFILE=/app/.bash_history
+      - DATABASE_HOST=mysql
+      - SELENIUM_HOST=selenium
+      - SELENIUM_PORT=4444
+      - TEST_APP_HOST=shell
+      - TEST_APP_PORT=3001
+    ports:
+      - "3000:3000"
+      - "3001:3001"
+    command: /bin/bash
+    depends_on:
+      - mysql
+
+  mysql:
+    image: mysql:8.4
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+    ports:
+      - "3306:3306"
+    healthcheck:
+      test: ["CMD-SHELL", "exit | mysql -h 127.0.0.1 -P 3306 -u root -p$$MYSQL_ROOT_PASSWORD" ]
+      interval: 5s
+
+  selenium:
+    image: selenium/standalone-chrome:118.0
+    logging:
+      driver: none
+    stdin_open: true
+    tty: true
+    environment:
+      - LANG=en_CA.UTF-8
+    ports:
+      - '4444:4444'
+      - '5900:5900'
+
+volumes:
+  mysql:
