@@ -11,3 +11,4 @@
 .ash_history
 
 vendor/bundle
+.bundle/cache
