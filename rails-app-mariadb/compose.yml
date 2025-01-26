@@ -1,5 +1,5 @@
 services:
-  shell: &shell
+  web: &web
     image: lenchoreyes/jade:rails-app-3.3-mariadb-bookworm
     tmpfs:
       - /tmp

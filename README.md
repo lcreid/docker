@@ -208,7 +208,7 @@ wget -O compose.yml https://github.com/lcreid/docker/raw/main/rails-app-postgres
 # The following line is only for Linux without Docker Desktop:
 wget -O compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/compose.override.yml
 docker compose up -d
-docker compose exec -it shell /bin/bash
+docker compose exec -it web /bin/bash
 gem install rails
 rails new -d postgresql -j esbuild -c bootstrap --skip-docker --skip-action-mailbox --skip-action-cable --skip-active-storage .
 ```
@@ -236,7 +236,7 @@ web: bin/rails server -p 3000 -b 0.0.0.0
 The app is ready to start. In another terminal:
 
 ```bash
-docker compose exec shell bin/dev
+docker compose exec web bin/dev
 ```
 
 Browse to `localhost:3000` and you should see the default Rails welcome page.
@@ -258,8 +258,8 @@ cd <project>
 wget -O compose.yml https://github.com/lcreid/docker/raw/main/rails-app-mariadb/compose.with-selenium.yml
 # The following line is only for Linux without Docker Desktop:
 wget -O compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/compose.override.yml
-docker compose up &
-docker compose exec -it shell /bin/bash
+docker compose up -d
+docker compose exec -it web /bin/bash
 gem install rails
 rails new -d mysql -j esbuild -c bootstrap --skip-docker --skip-action-mailbox --skip-action-cable --skip-active-storage .
 ```
@@ -287,7 +287,7 @@ web: bin/rails server -p 3000 -b 0.0.0.0
 The app is ready to start. In another terminal:
 
 ```bash
-docker compose exec shell bin/dev
+docker compose exec web bin/dev
 ```
 
 Browse to `localhost:3000` and you should see the default Rails welcome page.
@@ -308,8 +308,8 @@ cd <project>
 wget -O compose.yml https://github.com/lcreid/docker/raw/main/rails-app-sqlite/compose.with-selenium.yml
 # The following line is only for Linux without Docker Desktop:
 wget -O compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/compose.override.yml
-docker compose up &
-docker compose exec -it shell /bin/bash
+docker compose up -d
+docker compose exec -it web /bin/bash
 gem install rails
 rails new -j esbuild -c bootstrap --skip-docker --skip-action-mailbox --skip-action-cable --skip-active-storage .
 ```
@@ -323,14 +323,14 @@ web: bin/rails server -p 3000 -b 0.0.0.0
 The app is ready to start. In another terminal:
 
 ```bash
-docker compose exec shell bin/dev
+docker compose exec web bin/dev
 ```
 
 Browse to `localhost:3000` and you should see the default Rails welcome page.
 
 ### Restarting
 
-If you're running `shell` in one window and the server in another, you can restart the server with:
+If you're running `web` in one window and the server in another, you can restart the server with:
 
 ```bash
 bin/rails restart

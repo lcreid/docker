@@ -1,7 +1,7 @@
 # https://blog.giovannidemizio.eu/2021/05/24/how-to-set-user-and-group-in-docker-compose/
 
 services:
-  shell:
+  web:
     # You have to set the user and group for this process, because you're going to be
     # creating all kinds of files from inside the container, that need to persist
     # outside the container.
