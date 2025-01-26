@@ -204,10 +204,10 @@ Here's the outline of what we're going to do:
 ```bash
 mkdir <project>
 cd <project>
-wget -O docker-compose.yml https://github.com/lcreid/docker/raw/main/rails-app-postgres/docker-compose.with-selenium.yml
+wget -O compose.yml https://github.com/lcreid/docker/raw/main/rails-app-postgres/compose.with-selenium.yml
 # The following line is only for Linux without Docker Desktop:
-wget -O docker-compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/docker-compose.override.yml
-docker compose up &
+wget -O compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/compose.override.yml
+docker compose up -d
 docker compose exec -it shell /bin/bash
 gem install rails
 rails new -d postgresql -j esbuild -c bootstrap --skip-docker --skip-action-mailbox --skip-action-cable --skip-active-storage .
@@ -255,9 +255,9 @@ Here's the outline of what we're going to do:
 ```bash
 mkdir <project>
 cd <project>
-wget -O docker-compose.yml https://github.com/lcreid/docker/raw/main/rails-app-mariadb/docker-compose.with-selenium.yml
+wget -O compose.yml https://github.com/lcreid/docker/raw/main/rails-app-mariadb/compose.with-selenium.yml
 # The following line is only for Linux without Docker Desktop:
-wget -O docker-compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/docker-compose.override.yml
+wget -O compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/compose.override.yml
 docker compose up &
 docker compose exec -it shell /bin/bash
 gem install rails
@@ -305,9 +305,9 @@ Here's the outline of what we're going to do:
 ```bash
 mkdir <project>
 cd <project>
-wget -O docker-compose.yml https://github.com/lcreid/docker/raw/main/rails-app-sqlite/docker-compose.with-selenium.yml
+wget -O compose.yml https://github.com/lcreid/docker/raw/main/rails-app-sqlite/compose.with-selenium.yml
 # The following line is only for Linux without Docker Desktop:
-wget -O docker-compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/docker-compose.override.yml
+wget -O compose.override.yml https://github.com/lcreid/docker/raw/main/Linux/compose.override.yml
 docker compose up &
 docker compose exec -it shell /bin/bash
 gem install rails
@@ -344,7 +344,7 @@ bin/rails restart
 ## Irritating Stuff
 
 * The `tmp/pids/server.pid` file lives on after the container stops running in many cases, so you have to manually delete it all the time.
-* Any volume for which the file or directory doesn't exist on the host, will be created by Docker before the `docker-compose.override.yml` takes effect, meaning they get created as `root`.
+* Any volume for which the file or directory doesn't exist on the host, will be created by Docker before the `compose.override.yml` takes effect, meaning they get created as `root`.
 
 ## Notes from Research
 
