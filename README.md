@@ -44,7 +44,7 @@ Here's the `Dockerfile` (from the `ruby-app` directory):
 
 ```dockerfile
 ARG RUBY_VERSION=3.2
-ARG DISTRO=bullseye
+ARG DISTRO=bookworm
 
 FROM ruby:$RUBY_VERSION-$DISTRO
 
@@ -63,7 +63,7 @@ RUN (echo 'docker'; echo 'docker') | passwd root
 To build the image:
 
 ```bash
-docker build --build-arg "RUBY_VERSION=3.2" --build-arg "DISTRO=bullseye" --tag lenchoreyes/jade:ruby-app-3.2-bullseye .
+docker build --build-arg "RUBY_VERSION=3.2" --build-arg "DISTRO=bookworm" --tag lenchoreyes/jade:ruby-app-3.4-bookworm .
 ```
 
 Replace `.` by whatever context or `Dockerfile` location is needed. Replace the value of the `--tag` argument by the name you want to attach to the image. While not necessary, it may be convenient to do as done above, naming the image with the ruby version and distribution it was built with.
@@ -71,13 +71,13 @@ Replace `.` by whatever context or `Dockerfile` location is needed. Replace the 
 To run the image:
 
 ```bash
-docker run --volume "$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -it lenchoreyes/jade:ruby-app-3.2-bullseye
+docker run --volume "$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -it lenchoreyes/jade:ruby-app-3.4-bookworm
 ```
 
 Note that if your host computer is running Ubuntu and yours is the only user account on the computer, you can most likely shorten the above to:
 
 ```bash
-docker run --volume "$PWD:/app" --user $UID:$UID -it lenchoreyes/jade:ruby-app-3.2-bullseye
+docker run --volume "$PWD:/app" --user $UID:$UID -it lenchoreyes/jade:ruby-app-3.4-bookworm
 ```
 
 The above short-cut won't work for scripts that you want to run for anyone on any machine. For that, use the longer form with the funky `grep` and `cut`.
@@ -85,7 +85,7 @@ The above short-cut won't work for scripts that you want to run for anyone on an
 If I'm going to run something that serves requests from another host or otherwise needs to respond on a port, I have to specify the port forwarding on the command line. For a typical Rails application that listens on port 3000 by default:
 
 ```bash
-docker run --volume "$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -p 3000:3000 -it lenchoreyes/jade:ruby-app-3.2-bullseye
+docker run --volume "$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -p 3000:3000 -it lenchoreyes/jade:ruby-app-3.4-bookworm
 ```
 
 ### `.gitignore`
@@ -105,7 +105,7 @@ The above leaves me with some history files and whatnot in the project directory
 vendor/bundle
 ```
 
-* Give the container a root password. (`sudo` isn't installed in the Debian container, so giving everyone `sudo` is more of a pain.) (Alpine's `su` isn't setuid, so it doesn't want to work, even with a password. bullseye's is `-rwsr-xr-x` and Alpine's is `-rwxrwxrwx`.)
+* Give the container a root password. (`sudo` isn't installed in the Debian container, so giving everyone `sudo` is more of a pain.) (Alpine's `su` isn't setuid, so it doesn't want to work, even with a password. bookworm's is `-rwsr-xr-x` and Alpine's is `-rwxrwxrwx`.)
 * Set the `HOME` environment variable to `/app`.
 * Make sure Bundler and `gem` install to persisted locations.
 * A persistent place to put gems.
@@ -121,7 +121,7 @@ For Rails, you also want:
 * The database client code and application.
 * `nodejs` and `yarn`, unless you're building an API-only application, probably newer versions of those than you get with the Debian distro.
 * A persistent place to put history for the database console app.
-* git (TBC). IIRC, there is some part of the Rails create that uses git. The bullseye Ruby images (Debian) come with git.
+* git (TBC). IIRC, there is some part of the Rails create that uses git. The `bookworm` Ruby images (Debian) come with git.
 * Expose at least port 3000 to the host.
 
 Rails brings with it potential requirements for many other things, most of which get into `docker compose` territory:
@@ -135,23 +135,23 @@ Rails brings with it potential requirements for many other things, most of which
 In `rails-app/Dockerfile`:
 
 ```bash
-docker build --build-arg "REPOSITORY=lenchoreyes/jade" --build-arg "IMAGE=ruby-app" --build-arg "RUBY_VERSION=3.2" --build-arg "DISTRO=bullseye" --tag lenchoreyes/jade:rails-app-3.2-bullseye .
+docker build --build-arg "REPOSITORY=lenchoreyes/jade" --build-arg "IMAGE=ruby-app" --build-arg "RUBY_VERSION=3.2" --build-arg "DISTRO=bookworm" --tag lenchoreyes/jade:rails-app-3.4-bookworm .
 ```
 
-The above assumes that you created the Ruby application image above, with the image name and tags `lenchoreyes/jade:ruby-app-3.2-bullseye`.
+The above assumes that you created the Ruby application image above, with the image name and tags `lenchoreyes/jade:ruby-app-3.4-bookworm`.
 
 ### Create a New Rails Image with Sqlite
 
 In `rails-app-sqlite/Dockerfile`:
 
 ```bash
-docker build --build-arg "REPOSITORY=lenchoreyes/jade" --build-arg "IMAGE=rails-app" --build-arg "RUBY_VERSION=3.2" --build-arg "DISTRO=bullseye" --tag lenchoreyes/jade:rails-app-3.2-sqlite-bullseye .
+docker build --build-arg "REPOSITORY=lenchoreyes/jade" --build-arg "IMAGE=rails-app" --build-arg "RUBY_VERSION=3.2" --build-arg "DISTRO=bookworm" --tag lenchoreyes/jade:rails-app-3.4-sqlite-bookworm .
 ```
 
 To run it:
 
 ```bash
-docker run --volume "$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -p 3000:3000 -it lenchoreyes/jade:rails-app-3.2-sqlite-bullseye /bin/bash
+docker run --volume "$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -p 3000:3000 -it lenchoreyes/jade:rails-app-3.4-sqlite-bookworm /bin/bash
 ```
 
 ### Creating a New Rails Project
@@ -170,12 +170,12 @@ I've run an API-only Rails new with just a Ruby application container built from
 I either create the Rails project in two steps like this:
 
 ```bash
-docker run --volume "$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -it lenchoreyes/jade:ruby-app-3.2-bullseye /bin/bash
+docker run --volume "$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -it lenchoreyes/jade:ruby-app-3.4-bookworm /bin/bash
 gem install rails
 rails new new-project
 exit
 cd new-project
-docker run --volume "$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -p 3000:3000 -it lenchoreyes/jade:ruby-app-3.2-bullseye
+docker run --volume "$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -p 3000:3000 -it lenchoreyes/jade:ruby-app-3.4-bookworm
 ```
 
 or in one step:
@@ -183,7 +183,7 @@ or in one step:
 ```bash
 mkdir new-project
 cd new-project
-docker run --volume "$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -p 3000:3000 -it lenchoreyes/jade:ruby-3.2-bullseye
+docker run --volume "$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -p 3000:3000 -it lenchoreyes/jade:ruby-3.4-bookworm
 gem install rails
 rails new .
 ```
@@ -355,7 +355,7 @@ docker run --volume="$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -
 The above runs in `/`, and therefore can't write `.irb_history`, and is pretty useless for running scripts. `pry` also looks to write `.local`, specifically `.local/share/pry/pry_history`.
 
 ```bash
-docker run --volume="$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -it ruby:3.2-bullseye
+docker run --volume="$PWD:/app" --user $UID:`grep ^$USERNAME /etc/passwd | cut -d: -f4` -it ruby:3.4-bookworm
 ```
 
 Both Alpine and Debian do this at the end of their `Dockerfile`s (at least for Ruby 3.2):
