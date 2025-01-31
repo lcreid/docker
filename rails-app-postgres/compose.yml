@@ -1,6 +1,6 @@
 services:
   web: &web
-    image: lenchoreyes/jade:rails-app-3.0-postgres-bookworm
+    image: lenchoreyes/jade:rails-app-3.4-postgres-bookworm
     tmpfs:
       - /tmp
     stdin_open: true
@@ -24,7 +24,7 @@ services:
       - postgres
 
   postgres:
-    image: postgres:13
+    image: postgres:16
     volumes:
       - postgres:/var/lib/postgresql/data
     environment:
