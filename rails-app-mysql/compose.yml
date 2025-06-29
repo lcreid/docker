@@ -1,6 +1,6 @@
 services:
   web: &web
-    image: lenchoreyes/jade:rails-app-3.3-mysql-bookworm
+    image: lenchoreyes/jade:rails-app-3.4-mysql-bookworm
     tmpfs:
       - /tmp
     stdin_open: true
