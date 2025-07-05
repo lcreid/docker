@@ -21,8 +21,9 @@ services:
       - TEST_APP_HOST=web
       - TEST_APP_PORT=3001
     ports:
-      - "3000:3000"
-      - "3001:3001"
+      - "3000"
+      - "3001"
+      - "5990"
     command: /bin/bash
     depends_on:
       - mysql
@@ -48,8 +49,7 @@ services:
     environment:
       - LANG=en_CA.UTF-8
     ports:
-      - '4444:4444'
-      - '5900:5900'
+      - "7900"
 
 volumes:
   mysql:

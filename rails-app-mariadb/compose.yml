@@ -14,8 +14,7 @@ services:
       - EDITOR=vi
     command: /bin/bash
     ports:
-      - "3000:3000"
-      - "3001:3001"
+      - ¨3000¨
     depends_on:
       - mariadb
 
