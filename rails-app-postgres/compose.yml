@@ -1,6 +1,6 @@
 services:
   web: &web
-    image: lenchoreyes/jade:rails-app-${RUBY_VERSION:-3.4}-postgres-bookworm
+    image: lenchoreyes/jade:rails-app-3.4-postgres-bookworm
     tmpfs:
       - /tmp
     stdin_open: true
