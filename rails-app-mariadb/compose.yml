@@ -1,17 +1,19 @@
 services:
-  web: &web
-    image: lenchoreyes/jade:rails-app-3.4-mariadb-bookworm
+  web:
+    image: lenchoreyes/jade:rails-app-${RUBY_VERSION:-4.0}-mariadb-trixie
     tmpfs:
       - /tmp
     stdin_open: true
     tty: true
+    user: "dev:dev"
     volumes:
-      - .:/app:cached
+      - .:/home/dev/app
+      - dev_home:/home/dev
     environment:
-      - DATABASE_HOST=mariadb
+      - SSH_AUTH_SOCK=/ssh-agent
+      - NODE_ENV=development
       - BOOTSNAP_CACHE_DIR=/usr/local/bundle/_bootsnap
       - WEB_CONCURRENCY=1
-      - EDITOR=vi
     command: /bin/bash
     ports:
       - ¨3000¨
@@ -34,4 +36,6 @@ services:
 # of the images and containers. If, for example, you need to change the default
 # mariadb user or password, you need to `docker volume rm <project_volume>`.
 volumes:
+  dev_home:
   mariadb:
+

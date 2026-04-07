@@ -1,21 +1,17 @@
 services:
-  web: &web
-    image: lenchoreyes/jade:rails-app-3.4-postgres-bookworm
-    tmpfs:
-      - /tmp
+  web:
+    image: lenchoreyes/jade:rails-app-${RUBY_VERSION:-4.0}-postgres-trixie
     stdin_open: true
     tty: true
+    user: "dev:dev"
     volumes:
-      - .:/app:cached
+      - .:/home/dev/app
+      - dev_home:/home/dev
     environment:
+      - SSH_AUTH_SOCK=/ssh-agent
       - NODE_ENV=development
-      # You can use DATABASE_URL in non-development situation, but it messes
-      # up the `rails db:*` tasks in a development situation.
-      # - DATABASE_URL=postgres://pg:pg@postgres:5432
-      - DATABASE_HOST=postgres
       - BOOTSNAP_CACHE_DIR=/usr/local/bundle/_bootsnap
       - WEB_CONCURRENCY=1
-      - EDITOR=vi
     command: /bin/bash
     ports:
       - ¨3000¨
@@ -40,4 +36,5 @@ services:
 # of the images and containers. If, for example, you need to change the default
 # postgres user or password, you need to `docker volume rm <project_volume>`.
 volumes:
+  dev_home:
   postgres:
