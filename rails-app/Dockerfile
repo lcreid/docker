@@ -1,11 +1,11 @@
-ARG RUBY_VERSION
-ARG DISTRO
+ARG RUBY_VERSION=4.0
+ARG DISTRO=trixie
 ARG REPOSITORY=lenchoreyes/jade
 ARG IMAGE=ruby-app
 
 FROM $REPOSITORY:$IMAGE-$RUBY_VERSION-$DISTRO
 
-ARG NODE_MAJOR=20
+ARG NODE_MAJOR=24
 
 # Rails wants a newer version of node that we get with the Debian distro.
 RUN apt-get install -y ca-certificates curl gnupg
@@ -17,10 +17,10 @@ RUN apt-get install nodejs -y -q
 RUN corepack enable
 
 # `rails-app` is useful for other things, like Jekyll, so let's install foreman as well.
-# Rails needs it anyway, at least in some configurationss, so this saves an install on-the-fly.
-# But we have to make sure it goes in a default location, too, because GEM_HOME was set in
-# the ruby-app image.
-RUN env -u GEM_HOME gem install foreman
+# Rails needs it anyway, at least in some configurations, so this saves an install on-the-fly.
+USER dev
+RUN gem install foreman
+USER root
 
 EXPOSE 3000
 

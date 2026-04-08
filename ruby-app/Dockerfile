@@ -1,16 +1,29 @@
-ARG RUBY_VERSION
-ARG DISTRO
+# Only works with Debian derivatives. Specifically _not_ with Alpine.
+ARG RUBY_VERSION=4.0
+ARG DISTRO=trixie
 
 FROM ruby:$RUBY_VERSION-$DISTRO
 
-RUN mkdir -p /app
-ENV HOME /app
-WORKDIR /app
+# Build arguments to match host user
+ARG UID=1000
+ARG GID=1000
 
-ENV GEM_HOME $HOME/vendor/bundle
-ENV BUNDLE_APP_CONFIG="$GEM_HOME"
-ENV PATH ./bin:$GEM_HOME/bin:$PATH
-# Make it so you can install packages in the image. For exploring and debugging, mostly.
-RUN (echo 'docker'; echo 'docker') | passwd root
+# Create non-root user with home directory
+RUN groupadd -g $GID dev && useradd -m -u $UID -g dev dev
 
-# This Dockerfile inherits the CMD from the Ruby image, which is `irb`.
+# Set environment
+# The image works when started manually from docker, without the bundler and gem environment variables,
+# but I can't get it to work when run from docker compose. Go figure.
+ENV HOME=/home/dev \
+  APP_HOME=/home/dev/app \
+  GEM_HOME=/usr/local/bundle \
+  BUNDLE_PATH=/usr/local/bundle
+
+# Create app directory
+# Touch history so if the first run of the container is with the root user, we don't create a history file
+# owned by root, which stops the dev user from saving any history.
+RUN mkdir -p ${APP_HOME} \
+  touch ${HOME}/.bash_history \
+  && chown -R dev:dev ${HOME}
+
+WORKDIR ${APP_HOME}
