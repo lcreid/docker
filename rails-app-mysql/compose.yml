@@ -16,7 +16,7 @@ services:
       - WEB_CONCURRENCY=1
     command: /bin/bash
     ports:
-      - ¨3000¨
+      - "3000"
     depends_on:
       - mysql
 

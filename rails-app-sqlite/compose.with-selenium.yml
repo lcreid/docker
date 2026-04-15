@@ -21,8 +21,8 @@ services:
       - TEST_APP_HOST=web
       - TEST_APP_PORT=3001
     ports:
-      - ¨3000¨
-      - ¨3001¨
+      - "3000"
+      - "3001"
       - "5990"
     command: /bin/bash
 
