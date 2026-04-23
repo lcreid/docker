@@ -22,8 +22,9 @@ ENV HOME=/home/dev \
 # Create app directory
 # Touch history so if the first run of the container is with the root user, we don't create a history file
 # owned by root, which stops the dev user from saving any history.
-RUN mkdir -p ${APP_HOME} \
-  touch ${HOME}/.bash_history \
+RUN mkdir -p ${APP_HOME} ${HOME}/.gem \
+  && touch ${HOME}/.bash_history \
+  && chmod 700 ${HOME}/.gem \
   && chown -R dev:dev ${HOME}
 
 WORKDIR ${APP_HOME}
