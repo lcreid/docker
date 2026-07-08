@@ -15,6 +15,7 @@ RUN echo "deb [signed-by=/etc/apt/keyrings/nodesource.gpg] https://deb.nodesourc
 RUN apt-get update
 RUN apt-get install nodejs -y -q
 RUN corepack enable
+RUN apt-get update && apt-get install libvips-dev -y -q
 
 # `rails-app` is useful for other things, like Jekyll, so let's install foreman as well.
 # Rails needs it anyway, at least in some configurations, so this saves an install on-the-fly.
