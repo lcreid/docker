@@ -7,6 +7,7 @@ FROM $REPOSITORY:$IMAGE-$RUBY_VERSION-$DISTRO
 
 RUN apt update -y -q && DEBIAN_FRONTEND=noninteractive apt install -yq --no-install-recommends \
     libpq-dev \
-    postgresql-client
+    postgresql-client && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # This Dockerfile inherits the CMD from the Ruby image, which is `irb`.
