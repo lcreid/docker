@@ -2,6 +2,8 @@
 
 services:
   web:
+    group_add:
+      - "140"
     volumes:
       - ~/.gitconfig:/home/dev/.gitconfig
       # - /etc/passwd:/etc/passwd:ro
