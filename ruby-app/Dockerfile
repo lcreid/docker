@@ -15,9 +15,7 @@ RUN groupadd -g $GID dev && useradd -m -u $UID -g dev dev
 # The image works when started manually from docker, without the bundler and gem environment variables,
 # but I can't get it to work when run from docker compose. Go figure.
 ENV HOME=/home/dev \
-  APP_HOME=/home/dev/app \
-  GEM_HOME=/usr/local/bundle \
-  BUNDLE_PATH=/usr/local/bundle
+  APP_HOME=/home/dev/app
 
 # Create app directory
 # Touch history so if the first run of the container is with the root user, we don't create a history file
