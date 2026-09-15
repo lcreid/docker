@@ -4,6 +4,12 @@ ARG DISTRO=trixie
 
 FROM ruby:$RUBY_VERSION-$DISTRO
 
+RUN apt -yq update && \
+  apt -yq upgrade && \
+  apt-get clean && \
+  rm -rf /var/lib/apt/lists/* && \
+  apt-get -yq autoremove
+
 # Build arguments to match host user
 ARG UID=1000
 ARG GID=1000
