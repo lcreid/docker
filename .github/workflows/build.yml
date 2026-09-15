@@ -20,14 +20,14 @@ jobs:
             distro: bullseye
     steps:
       - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v4
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and Push Ruby App
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: ruby-app
           build-args: |
@@ -36,7 +36,7 @@ jobs:
           tags: lenchoreyes/jade:ruby-app-${{ matrix.ruby_version }}-${{ matrix.distro }}
           push: true
       - name: Build and Push Rails App
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: rails-app
           build-args: |
@@ -58,14 +58,14 @@ jobs:
             distro: bullseye
     steps:
       - uses: actions/checkout@v4
-      - uses: docker/setup-buildx-action@v3
+      - uses: docker/setup-buildx-action@v4
       - name: Login to Docker Hub
-        uses: docker/login-action@v3
+        uses: docker/login-action@v4
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: Build and Push Rails App with DB
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: rails-app-${{ matrix.database }}
           build-args: |
